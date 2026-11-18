@@ -1,0 +1,29 @@
+ Container olap_clickhouse Running 
+ Container olap-course-metabase-1 Running 
+ Container olap_clickhouse Waiting 
+ Container olap_clickhouse Healthy 
+quality: empty snapshot = 0
+quality: missing keys, attributes or measures = 0
+quality: invalid quantity, amount, keys or date = 0
+quality: duplicate business keys = 0
+quality: missing references = 0
+raw: positions=15
+DuckDB: {'dim_date': 8, 'dim_product': 9, 'dim_store': 5, 'fact_sales': 15}, turnover=264.00
+ClickHouse: {'dim_date': 8, 'dim_product': 9, 'dim_store': 5, 'fact_sales': 15}, turnover=264.00
+264
+Оборот сети | Все регионы | rows=1 | sum=264.00
+Оборот сети | Запад | rows=1 | sum=153.50
+Оборот сети | Центр | rows=1 | sum=110.50
+Оборот по месяцам | Все регионы | rows=3 | sum=264.00
+Оборот по месяцам | Запад | rows=3 | sum=153.50
+Оборот по месяцам | Центр | rows=3 | sum=110.50
+Оборот по категориям | Все регионы | rows=5 | sum=264.00
+Оборот по категориям | Запад | rows=4 | sum=153.50
+Оборот по категориям | Центр | rows=3 | sum=110.50
+Три магазина с наибольшим оборотом | Все регионы | rows=3 | sum=194.50
+Три магазина с наибольшим оборотом | Запад | rows=3 | sum=153.50
+Три магазина с наибольшим оборотом | Центр | rows=2 | sum=110.50
+http://127.0.0.1:3000/dashboard/2
+real 24.93
+user 2.27
+sys 2.44

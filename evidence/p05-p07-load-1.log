@@ -1,0 +1,8 @@
+quality: empty snapshot = 0
+quality: missing keys, attributes or measures = 0
+quality: invalid quantity, amount, keys or date = 0
+quality: duplicate business keys = 0
+quality: missing references = 0
+raw: positions=15
+DuckDB: {'dim_date': 8, 'dim_product': 9, 'dim_store': 5, 'fact_sales': 15}, turnover=264.00
+ClickHouse: {'dim_date': 8, 'dim_product': 9, 'dim_store': 5, 'fact_sales': 15}, turnover=264.00

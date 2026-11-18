@@ -1,0 +1,38 @@
+NAME                     IMAGE                                COMMAND                  SERVICE      CREATED          STATUS                   PORTS
+olap-course-metabase-1   metabase/metabase:v0.56.7            "/app/run_metabase.sh"   metabase     39 seconds ago   Up 39 seconds            127.0.0.1:3000->3000/tcp
+olap_clickhouse          clickhouse/clickhouse-server:24.12   "/entrypoint.sh"         clickhouse   7 minutes ago    Up 4 minutes (healthy)   127.0.0.1:8123->8123/tcp, 127.0.0.1:9000->9000/tcp, 9009/tcp
+Ok.
+Waiting for ClickHouse at http://localhost:8123 ...
+Applying schema...
+Loading retail_dw.dim_store
+Loading retail_dw.dim_product
+Loading retail_dw.dim_date
+Loading retail_dw.fact_sales
+Counts:
+   ┏━━━━━━━━━━━━━┳━━━┓
+   ┃ t           ┃ c ┃
+   ┡━━━━━━━━━━━━━╇━━━┩
+1. │ dim_product │ 8 │
+   └─────────────┴───┘
+   ┏━━━━━━━━━━┳━━━┓
+   ┃ t        ┃ c ┃
+   ┡━━━━━━━━━━╇━━━┩
+2. │ dim_date │ 8 │
+   └──────────┴───┘
+   ┏━━━━━━━━━━━┳━━━┓
+   ┃ t         ┃ c ┃
+   ┡━━━━━━━━━━━╇━━━┩
+3. │ dim_store │ 5 │
+   └───────────┴───┘
+   ┏━━━━━━━━━━━━┳━━━━┓
+   ┃ t          ┃  c ┃
+   ┡━━━━━━━━━━━━╇━━━━┩
+4. │ fact_sales │ 15 │
+   └────────────┴────┘
+OK: retail_dw готов.
+15	264
+Revenue by region:
+  Запад: 153.5
+  Центр: 110.5
+OK → /tmp/olap-smoke/retail_local.duckdb
+{"status":"ok"}

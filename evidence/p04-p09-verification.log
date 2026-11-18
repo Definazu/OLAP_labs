@@ -1,0 +1,103 @@
+counts: DuckDB = ClickHouse (4 rows)
+  dim_date | 8
+  dim_product | 9
+  dim_store | 5
+  fact_sales | 15
+canonical metric: DuckDB = ClickHouse (1 rows)
+  264.00
+monthly stores: DuckDB = ClickHouse (12 rows)
+  2024 | 1 | 1 | Центр | 32.50
+  2024 | 1 | 2 | Корона | 20.00
+  2024 | 1 | 3 | Немига | 46.00
+  2024 | 1 | 4 | Галерея | 27.00
+  2024 | 2 | 1 | Центр | 6.00
+  2024 | 2 | 2 | Корона | 45.00
+  2024 | 2 | 3 | Немига | 22.50
+  2024 | 2 | 5 | Брест-Парк | 5.00
+  2024 | 3 | 1 | Центр | 10.50
+  2024 | 3 | 2 | Корона | 12.00
+  2024 | 3 | 4 | Галерея | 15.00
+  2024 | 3 | 5 | Брест-Парк | 22.50
+regional category rank: DuckDB = ClickHouse (7 rows)
+  Запад | Молочка | 79.50 | 1
+  Запад | Напитки | 50.00 | 2
+  Запад | Хлеб | 18.00 | 3
+  Запад | Бакалея | 6.00 | 4
+  Центр | Напитки | 61.00 | 1
+  Центр | Молочка | 27.00 | 2
+  Центр | Молочные напитки | 22.50 | 3
+top 3 stores: DuckDB = ClickHouse (3 rows)
+  2 | Корона | Гродно | 77.00
+  3 | Немига | Минск | 68.50
+  1 | Центр | Гродно | 49.00
+January West: DuckDB = ClickHouse (2 rows)
+  2024-01-01 | 32.50
+  2024-01-02 | 20.00
+monthly and yearly roll-up: DuckDB = ClickHouse (4 rows)
+  2024 | 0 | 264.00
+  2024 | 1 | 125.50
+  2024 | 2 | 78.50
+  2024 | 3 | 60.00
+daily aggregate: no differences at date_id × store_id grain
+202401	125.5
+202402	78.5
+202403	60
+January filter vs store-only filter:
+Expression ((Project names + Projection))
+  Aggregating
+    Expression (Before GROUP BY)
+      Expression
+        ReadFromMergeTree (retail_mart.fact_sales)
+        Indexes:
+          MinMax
+            Keys: 
+              date_id
+            Condition: and((intDiv(date_id, 100) in [202401, 202401]), and((date_id in (-Inf, 20240131]), (date_id in [20240101, +Inf))))
+            Parts: 1/3
+            Granules: 1/3
+          Partition
+            Keys: 
+              intDiv(date_id, 100)
+            Condition: and((intDiv(date_id, 100) in [202401, 202401]), and((intDiv(date_id, 100) in (-Inf, 202401]), (intDiv(date_id, 100) in [202401, +Inf))))
+            Parts: 1/1
+            Granules: 1/1
+          PrimaryKey
+            Keys: 
+              date_id
+            Condition: and((intDiv(date_id, 100) in [202401, 202401]), and((date_id in (-Inf, 20240131]), (date_id in [20240101, +Inf))))
+            Parts: 1/1
+            Granules: 1/1
+Expression ((Project names + Projection))
+  Aggregating
+    Expression (Before GROUP BY)
+      Expression
+        ReadFromMergeTree (retail_mart.fact_sales)
+        Indexes:
+          MinMax
+            Condition: true
+            Parts: 3/3
+            Granules: 3/3
+          Partition
+            Condition: true
+            Parts: 3/3
+            Granules: 3/3
+          PrimaryKey
+            Keys: 
+              store_id
+            Condition: (store_id in [1, 1])
+            Parts: 3/3
+            Granules: 3/3
+  10120240101 | 101 | Молочка | 2024-01-01 | 2024-02-01 | False
+  10120240201 | 101 | Молочные напитки | 2024-02-01 | None | True
+  2024-01-01 | 1 | 10120240101 | Молочка | 25.00
+  2024-01-02 | 3 | 10120240101 | Молочка | 20.00
+  2024-02-14 | 11 | 10120240201 | Молочные напитки | 22.50
+SCD2: January before and after the change: Молочка | 45.00
+bad store FK rejected (exit 1):
+quality: empty snapshot = 0
+quality: missing keys, attributes or measures = 0
+quality: invalid quantity, amount, keys or date = 0
+quality: duplicate business keys = 0
+quality: missing references = 1
+Load failed: quality checks failed; warehouse was not changed
+previous snapshot retained: 264.00
